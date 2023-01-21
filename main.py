@@ -17,12 +17,6 @@ if(__name__=="__main__"):
     criteration = nn.NLLLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
 
-    batch = next(iter(train_loader))
-    images = batch[0]
-    labels = batch[1]
-    logps = model(batch[0])
-    loss = criteration(logps, labels)
-
     epochs=50
     print("start training")
     for epoch in range(epochs):
@@ -31,7 +25,7 @@ if(__name__=="__main__"):
         running_loss = 0
         for batch_nb, batch in enumerate(pbar):
             image = batch[0]
-            label = batch[1]
+            labels = batch[1]
             pbar.set_postfix(OrderedDict({"loss":running_loss}))
             optimizer.zero_grad()
             output = model(image)
