@@ -44,8 +44,8 @@ if(__name__=="__main__"):
             image = batch[0]
             labels = batch[1]
             if(torch.cuda.is_available()):
-                image = image.cuda()
-                labels = labels.cuda()
+                image.cuda()
+                labels.cuda()
 
             feed_size += len(labels)
             pbar.set_postfix(OrderedDict({"eval_loss":running_loss_eval/feed_size}))
