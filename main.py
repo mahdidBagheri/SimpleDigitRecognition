@@ -51,13 +51,11 @@ if(__name__=="__main__"):
         feed_size=0
         for batch_nb, batch in enumerate(pbar_eval):
             image = batch[0]
-            labels =  nn.functional.one_hot(batch[1],num_classes=10)
+            labels =  nn.functional.one_hot(batch[1],num_classes=10).to(dtype=torch.float32)
             if(torch.cuda.is_available()):
                 image = image.cuda()
                 labels = labels.cuda()
-
             feed_size += len(labels)
-
             optimizer.zero_grad()
             output = model(image)
             loss = criteration(output,labels)
