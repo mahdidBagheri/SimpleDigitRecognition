@@ -31,7 +31,7 @@ if(__name__=="__main__"):
             if(torch.cuda.is_available()):
                 image = image.cuda()
                 labels = labels.cuda()
-            feed_size += len(labels)
+            feed_size += len(image)
             optimizer.zero_grad()
             output = model(image)
             wr += float(torch.sum(torch.abs(output - labels)))/2
@@ -55,7 +55,7 @@ if(__name__=="__main__"):
             if(torch.cuda.is_available()):
                 image = image.cuda()
                 labels = labels.cuda()
-            feed_size += len(labels)
+            feed_size += len(image)
             optimizer.zero_grad()
             output = model(image)
             loss = criteration(output,labels)
