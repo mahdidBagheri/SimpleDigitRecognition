@@ -21,20 +21,40 @@ if(__name__=="__main__"):
     print("start training")
     for epoch in range(epochs):
         pbar = tqdm(train_loader, desc='Epoch: [%d]/[%d] Training' % (epoch, epochs), leave=True)
-        model.train()
+
         running_loss = 0
+        feed_size = 0
         for batch_nb, batch in enumerate(pbar):
             image = batch[0]
             labels = batch[1]
-            pbar.set_postfix(OrderedDict({"loss":running_loss}))
+            feed_size += len(labels)
+            pbar.set_postfix(OrderedDict({"train_loss":running_loss/feed_size}))
             optimizer.zero_grad()
             output = model(image)
             loss = criteration(output,labels)
             loss.backward()
             optimizer.step()
-            running_loss = loss.item()
+            running_loss += loss.item()
 
         print("Epoch {} - Training loss: {}".format(epoch, running_loss / len(train_loader)))
+
+        running_loss_eval = 0
+        pbar_eval = tqdm(val_loader, desc='Epoch: [%d]/[%d] validation' % (epoch, epochs), leave=True)
+        for batch_nb, batch in enumerate(pbar_eval):
+            image = batch[0]
+            labels = batch[1]
+            feed_size += len(labels)
+            pbar.set_postfix(OrderedDict({"eval_loss":running_loss_eval/feed_size}))
+            optimizer.zero_grad()
+            output = model(image)
+            loss = criteration(output,labels)
+            loss.backward()
+            optimizer.step()
+            running_loss_eval += loss.item()
+
+        print("Epoch {} - Eval loss: {}".format(epoch, running_loss_eval / len(val_loader)))
+
+
 
 
 
