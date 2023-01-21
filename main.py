@@ -34,7 +34,8 @@ if(__name__=="__main__"):
             feed_size += len(image)
             optimizer.zero_grad()
             output = model(image)
-            wr += float(torch.sum(torch.abs(output - labels)))/2
+            wrong = float(torch.sum(torch.abs(output - labels)))/2
+            wr += wrong
             loss = criteration(output,labels)
             loss.backward()
             optimizer.step()
