@@ -10,8 +10,9 @@ class conv_block(nn.Module):
 
     def forward(self, X):
         X = self.conv(X)
-        X = self.activation(X)
         X = self.bn(X)
+        X = self.activation(X)
+
         return X
 
 class linear_block(nn.Module):
@@ -25,9 +26,10 @@ class linear_block(nn.Module):
 
     def forward(self, X):
         X = self.linear(X)
-        X = self.activation(X)
         if(self.is_bn):
             X = self.bn(X)
+        X = self.activation(X)
+
         return X
 
 class Recognizer(nn.Module):
@@ -43,6 +45,7 @@ class Recognizer(nn.Module):
         self.lin1 = linear_block(8*8*128,8*128)
         self.lin2 = linear_block(8*128,128)
         self.lin3 = linear_block(128,10)
+        self.softmax = nn.Softmax(dim=1)
 
     def forward(self,X):
         if(torch.cuda.is_available()):
@@ -56,6 +59,7 @@ class Recognizer(nn.Module):
         X = self.lin1(X)
         X = self.lin2(X)
         X = self.lin3(X)
+        X = self.softmax(X)
         return X
 
 

@@ -26,7 +26,7 @@ if(__name__=="__main__"):
         feed_size = 0
         for batch_nb, batch in enumerate(pbar):
             image = batch[0]
-            labels = batch[1]
+            labels = nn.functional.one_hot(batch[1])
             if(torch.cuda.is_available()):
                 image = image.cuda()
                 labels = labels.cuda()
@@ -45,7 +45,7 @@ if(__name__=="__main__"):
         pbar_eval = tqdm(val_loader, desc='Epoch: [%d]/[%d] validation' % (epoch, epochs), leave=True)
         for batch_nb, batch in enumerate(pbar_eval):
             image = batch[0]
-            labels = batch[1]
+            labels =  nn.functional.one_hot(batch[1])
             if(torch.cuda.is_available()):
                 image = image.cuda()
                 labels = labels.cuda()
