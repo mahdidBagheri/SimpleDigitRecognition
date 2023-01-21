@@ -27,6 +27,9 @@ if(__name__=="__main__"):
         for batch_nb, batch in enumerate(pbar):
             image = batch[0]
             labels = batch[1]
+            if(torch.cuda.is_available()):
+                image.cuda()
+                labels.cuda()
             feed_size += len(labels)
             pbar.set_postfix(OrderedDict({"train_loss":running_loss/feed_size}))
             optimizer.zero_grad()
