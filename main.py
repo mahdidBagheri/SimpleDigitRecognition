@@ -48,6 +48,7 @@ if(__name__=="__main__"):
 
         pbar_eval = tqdm(val_loader, desc='Epoch: [%d]/[%d] validation' % (epoch, epochs), leave=True)
         wr = 0
+        feed_size=0
         for batch_nb, batch in enumerate(pbar_eval):
             image = batch[0]
             labels =  nn.functional.one_hot(batch[1],num_classes=10)
@@ -56,14 +57,15 @@ if(__name__=="__main__"):
                 labels = labels.cuda()
 
             feed_size += len(labels)
-            pbar.set_postfix(OrderedDict({"eval_loss":running_loss_eval/feed_size}))
+
             optimizer.zero_grad()
             output = model(image)
             loss = criteration(output,labels)
-            wr += torch.sum(torch.abs(output - labels))
+            wr += float(torch.sum(torch.abs(output - labels))) / 2
             loss.backward()
             optimizer.step()
             running_loss_eval += loss.item()
+            pbar_eval.set_postfix(OrderedDict({"val_loss":running_loss/feed_size, "precision":1-wr/feed_size}))
 
         print("Epoch {} - Eval loss: {}".format(epoch, running_loss_eval / len(val_loader)))
         print(f"precision={wr/len(val_loader)}")
