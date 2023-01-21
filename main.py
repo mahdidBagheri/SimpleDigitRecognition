@@ -42,7 +42,7 @@ if(__name__=="__main__"):
             pbar.set_postfix(OrderedDict({"train_loss":running_loss/feed_size, "precision":1-wr/feed_size}))
 
 
-        print("Epoch {} - Training loss: {}".format(epoch, running_loss / len(train_loader)))
+        print("Epoch {} - Training loss: {}".format(epoch, running_loss / feed_size))
 
         running_loss_eval = 0
 
@@ -59,14 +59,14 @@ if(__name__=="__main__"):
             optimizer.zero_grad()
             output = model(image)
             loss = criteration(output,labels)
-            wr += float(torch.sum(torch.abs(output - labels))) / 2
+            wr += float(torch.sum(torch.abs(output - labels)))/2
             loss.backward()
             optimizer.step()
             running_loss_eval += loss.item()
             pbar_eval.set_postfix(OrderedDict({"val_loss":running_loss/feed_size, "precision":1-wr/feed_size}))
 
         print("Epoch {} - Eval loss: {}".format(epoch, running_loss_eval / len(val_loader)))
-        print(f"precision={wr/len(val_loader)}")
+        print(f"precision={1-wr/feed_size}")
 
 
 
